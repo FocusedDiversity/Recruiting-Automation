@@ -1,7 +1,7 @@
 # Recruiting Automation — Project Plan
 
 **Last Updated:** 2026-03-15
-**Status:** MVP Planning Complete — Ready to Build
+**Status:** MVP In Progress — Step 2 Complete
 
 ---
 
@@ -246,6 +246,20 @@ Candidate visits job posting
 
 ---
 
+## Google Drive Folder IDs
+
+> These are needed for Make.com configuration.
+
+| Folder | ID |
+|---|---|
+| `_Automation` (root) | `112ubR99hjiofzA0UzrQe9AXjywV0_P4g` |
+| `Candidates` (inside Data Engineer (Test) - 2026-03-15) | `1Qh1yRfaX6L1XHJAn72Hqb0BQ3y-i2Hv7` |
+
+**Full path in Shared Drive:**
+`07 - Recruiting > _Automation > Active Roles > [Role Title] - [YYYY-MM-DD] > Candidates`
+
+---
+
 ## Session Log
 
 ### 2026-03-15 — Session 1
@@ -263,4 +277,10 @@ Candidate visits job posting
 - Initial project structure created (prompts/, make-scenarios/, sheets/, docs/)
 - Project plan written (this document)
 
-**Next session should start at:** Step 1 — Google Drive folder structure setup
+**Next session should start at:** Step 3 — Google Sheets Master Tracker
+
+### 2026-03-15 — Session 1 (continued)
+**Completed:**
+- Step 2: Google Drive folder structure created in corporate shared drive
+- Folder IDs captured for Make.com use
+- Naming convention confirmed: `[Role Title] - [YYYY-MM-DD]` for roles, `LastName, FirstName` for candidates
