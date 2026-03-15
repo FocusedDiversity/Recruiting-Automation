@@ -1,42 +1,74 @@
 # Recruiting Automation — Project Plan
 
 **Last Updated:** 2026-03-15
-**Status:** MVP In Progress
+**Status:** MVP Planning Complete — Ready to Build
 
 ---
 
-## Goal
+## How to Resume This Project With Claude
 
-Build an AI-powered recruiting system that automates candidate intake, file organization, and LLM-based screening — enabling hiring managers to quickly identify and prioritize the best candidates across open roles.
+Share this file at the start of any new session:
+> "Here is my project plan: [paste contents or link to this file]. Please review and help me continue from where I left off."
 
 ---
 
-## Background
+## Company Context
 
-Synaptides is standing up a structured, repeatable recruiting process powered by LLMs. The system should:
-- Accept applications via a clean web form
-- Automatically organize candidate materials in Google Drive
-- Use Claude to evaluate each applicant against role requirements and cultural fit (Synaptitudes)
-- Surface ranked results to the hiring manager in a single tracking view
+- **Company:** Synaptiq (synaptiq.ai)
+- **Size:** ~10 people, growing to ~30 in 18 months
+- **Hiring Manager (MVP):** Rich Manegio
+- **Google Workspace:** Active (Drive + Sheets in use)
+
+---
+
+## Problem We Are Solving
+
+Synaptiq has no formal recruiting process today. Hiring has been ad-hoc and manual. We want a scalable, repeatable, AI-powered system that lets us quickly screen, identify, and hire the best candidates — ideally within a two-week cycle.
+
+---
+
+## Full Vision (All Phases)
+
+The end-state system will:
+- Accept applications via synaptiq.ai/careers
+- Ingest and organize all candidate materials in Google Drive automatically
+- Screen candidates using LLM evaluation against job requirements and Synaptitudes
+- Maintain a live, rank-ordered candidate list across all roles
+- Generate standard + customized interview questions per candidate
+- Track candidates through all interview stages with rolling interview notes
+- Offer candidates an optional AI-powered screening interview
+- Communicate proactively with candidates throughout the process
+- Automate offer letters and next-step communications
 
 ---
 
 ## MVP Scope
 
-**In scope:**
-- 2 open roles
-- Application form per role (Tally.so)
-- Automated GDrive folder creation per candidate
-- Candidate tracking via Google Sheets
-- LLM evaluation (Claude API) triggered on each new application
-- LLM output written to Sheet + candidate GDrive folder
+**The core loop: Application In → Organized in Drive → AI Evaluation Out → Hiring Manager Decides**
 
-**Out of scope (post-MVP):**
-- Candidate-facing email acknowledgements
-- Google Scheduler integration for self-serve interview booking
-- Multi-stage interview tracking
-- Custom-built application form (website-embedded)
-- Automated reference checks or assignment workflows
+### In Scope
+- Candidate submits application via form (name, email, phone, LinkedIn URL, GitHub URL, resume, cover letter)
+- Materials auto-filed in Google Drive with structured folder hierarchy
+- Documents stored in original format AND converted to Google Docs
+- Candidate auto-added to Google Sheets tracking database
+- Claude evaluates each candidate and scores them on:
+  - **Job Match** (1–5): How well the candidate meets role requirements
+  - **Cultural Fit** (1–5): Alignment with Synaptitudes and team culture
+  - **Career Trajectory** (1–5): Is this role the right fit for where they are in their career? Under/over/well-qualified?
+  - **Overall Rating** (1–5): Composite rating
+- Qualitative output per candidate: strengths, risks, overall fit summary
+- Custom interview questions generated per candidate (standard + role-specific)
+- Consolidated ranked candidate list, auto-updated as new applicants arrive
+- System is role-agnostic: roles, job descriptions, and criteria are inputs, not hardcoded
+
+### Out of Scope (Post-MVP)
+- Candidate-facing communications (acknowledgements, status updates)
+- Automated offer letters
+- AI screening interview (third-party)
+- Multi-stage interview tracking and rolling interview notes
+- Job posting automation
+- Website-embedded application form (synaptiq.ai/careers)
+- Automated scheduling (Google Scheduler)
 
 ---
 
@@ -44,36 +76,11 @@ Synaptides is standing up a structured, repeatable recruiting process powered by
 
 | Component | Tool | Notes |
 |---|---|---|
-| Application form | Tally.so | Free tier; supports file uploads |
-| Automation | Make.com | More powerful than Zapier for multi-step flows |
-| File storage | Google Drive | Already in use (Google Workspace) |
-| Candidate DB | Google Sheets | One sheet per role |
-| LLM Evaluation | Claude API (Sonnet) | `claude-sonnet-4-6`; long context, cost-effective |
-
----
-
-## Full Workflow (Target State)
-
-```
-Planning & Inputs
-  → Configure LLM & Post Job (company website, LinkedIn, Indeed)
-  → Candidate Submits Application (Tally form)
-  → Send Acknowledgement Email
-  → Store Applicant in Tracking Sheet
-  → Store Application Documents in GDrive
-  → Perform LLM Evaluation
-  → Update Tracking Sheet with Results
-  → Hiring Manager Reviews & Prioritizes
-  → Contact Candidates to Schedule Interviews (Google Scheduler)
-```
-
-### Interview Stages
-1. LLM Screening (automated)
-2. AI Screening Interview (optional)
-3. Interview #1 — Synaptitudes / General Fit
-4. Interview #2 — Technical / Functional Fit
-5. Assignment
-6. Final Decision: Hire / Save for Future / Not Interested
+| Application form | Tally.so | Free tier; supports file uploads; easy Make.com integration |
+| Automation | Make.com | Connects all tools; handles file routing + API calls |
+| File storage | Google Drive | Already in use |
+| Candidate database | Google Sheets | One master sheet + one sheet per role |
+| LLM Evaluation | Claude API | Model: `claude-sonnet-4-6`; long context, cost-effective |
 
 ---
 
@@ -81,135 +88,179 @@ Planning & Inputs
 
 ```
 Recruiting/
-  [Role Title] - [Start Date]/
-    _Job Description.pdf
+  _Templates/
+    _Job Description Template.docx
+    _Synaptitudes.pdf
+    _Candidate Tracker Template (Sheet)
+  [Role Title] - [YYYY-MM-DD]/
+    _Job Description - [Role Title].pdf
     _Synaptitudes.pdf
     _Candidate Tracker (link to Sheet)
     Candidates/
       [LastName, FirstName]/
         Resume - [LastName, FirstName].pdf
+        Resume - [LastName, FirstName].gdoc        ← Google Docs version
         Cover Letter - [LastName, FirstName].pdf
-        LinkedIn - [LastName, FirstName].pdf (optional)
-        LLM Evaluation - [LastName, FirstName].md
+        Cover Letter - [LastName, FirstName].gdoc  ← Google Docs version
+        LLM Evaluation - [LastName, FirstName].gdoc
 ```
 
 ---
 
-## Google Sheets Tracker Columns
+## Google Sheets Structure
+
+### Master Tracker (all roles, all candidates)
+One sheet to rule them all — rank-ordered by Overall Rating.
+
+### Per-Role Sheet
+Filtered view of the master for each open role.
+
+### Columns
 
 | Column | Source |
 |---|---|
+| Rank | Auto-calculated (sorted by Overall Rating) |
 | Timestamp | Auto (Make) |
+| Role | Form / Make |
 | Full Name | Form |
 | Email | Form |
 | Phone | Form |
 | LinkedIn URL | Form |
+| GitHub URL | Form |
 | Resume Link | GDrive (Make) |
 | Cover Letter Link | GDrive (Make) |
 | Candidate Folder Link | GDrive (Make) |
-| LLM Score (1-10) | Claude API |
-| LLM Summary | Claude API |
+| Job Match Score (1–5) | Claude API |
+| Cultural Fit Score (1–5) | Claude API |
+| Career Trajectory Score (1–5) | Claude API |
+| Overall Rating (1–5) | Claude API |
 | Strengths | Claude API |
-| Concerns | Claude API |
-| Synaptitudes Alignment | Claude API |
-| Recommended Questions | Claude API |
-| LLM Decision | Claude API |
+| Risks / Concerns | Claude API |
+| Fit Summary | Claude API |
+| Interview Questions | Claude API |
 | Stage | Manual |
 | Hiring Manager Notes | Manual |
 
 ---
 
-## LLM Evaluation Output Structure
-
-Claude returns a structured JSON object per candidate:
+## LLM Evaluation Output (JSON)
 
 ```json
 {
-  "overall_score": 8,
-  "summary": "...",
+  "job_match_score": 2,
+  "cultural_fit_score": 1,
+  "career_trajectory_score": 2,
+  "overall_rating": 2,
   "strengths": ["...", "..."],
-  "concerns": ["...", "..."],
-  "synaptitudes_alignment": { "score": 7, "notes": "..." },
-  "technical_fit": { "score": 8, "notes": "..." },
-  "recommended_questions": ["...", "...", "..."],
+  "risks": ["...", "..."],
+  "fit_summary": "...",
+  "standard_interview_questions": ["...", "...", "..."],
+  "custom_interview_questions": ["...", "...", "..."],
   "decision": "Advance | Hold | Pass",
   "decision_rationale": "..."
 }
 ```
 
+**Scoring key:** 1 = Best fit, 5 = Worst fit
+
 ---
 
-## Build Order (MVP)
+## MVP Workflow
 
-### Step 1 — Google Drive Structure ✅ Designed / ⬜ Implemented
+```
+Candidate visits job posting
+  → Submits Tally form (info + resume + cover letter)
+  → Make.com triggers automatically:
+      1. Creates candidate folder in GDrive
+      2. Uploads files (PDF + converts to Google Docs)
+      3. Adds row to Google Sheets tracker
+      4. Sends materials to Claude API for evaluation
+      5. Writes scores + summary back to Sheet
+      6. Creates LLM Evaluation doc in GDrive candidate folder
+      7. Re-sorts master tracker by Overall Rating
+  → Rich opens tracker, reviews ranked list, reads summaries
+  → Decides: Advance / Hold / Pass
+```
+
+---
+
+## Build Order
+
+### Step 1 — Google Drive Structure ⬜
 - [ ] Create `Recruiting/` top-level folder
-- [ ] Create Role A subfolder with `_Job Description`, `_Synaptitudes`, `Candidates/`
-- [ ] Create Role B subfolder (same structure)
+- [ ] Create `_Templates/` subfolder with Synaptitudes + tracker template
+- [ ] Confirm naming convention
 
 ### Step 2 — Google Sheets Tracker ⬜
-- [ ] Create tracker sheet for Role A
-- [ ] Create tracker sheet for Role B
-- [ ] Add all columns per spec (see above)
+- [ ] Create Master Tracker sheet with all columns
+- [ ] Set up rank-ordering formula
+- [ ] Create template to duplicate per role
 
 ### Step 3 — Tally Application Form ⬜
-- [ ] Build form for Role A
-- [ ] Build form for Role B
-- [ ] Fields: Name, Email, Phone, LinkedIn, Resume upload, Cover Letter upload
+- [ ] Create one master form (role-agnostic)
+- [ ] Fields: Name, Email, Phone, LinkedIn URL, GitHub URL, Resume upload, Cover Letter upload, Role applying for
+- [ ] Connect Tally webhook to Make.com
 
-### Step 4 — Make.com Automation Scenario ⬜
+### Step 4 — Claude Evaluation Prompt ⬜
+- [ ] Write system prompt (company context + Synaptitudes)
+- [ ] Write user prompt template with variable placeholders
+- [ ] Test manually with sample resume + cover letter
+- [ ] Iterate until output quality is solid
+- [ ] Finalize JSON output structure
+
+### Step 5 — Make.com Automation Scenario ⬜
+- [ ] Set up Make.com account
 - [ ] Connect Tally webhook trigger
-- [ ] Create GDrive candidate folder
-- [ ] Upload resume + cover letter to folder
-- [ ] Add row to Google Sheet
-- [ ] Extract file text content
-- [ ] Call Claude API with evaluation prompt
-- [ ] Parse JSON response
-- [ ] Update Sheet with LLM results
-- [ ] Create LLM Evaluation doc in GDrive
-
-### Step 5 — Claude Evaluation Prompt ⬜
-- [ ] Finalize system prompt with company brief + Synaptitudes
-- [ ] Finalize user prompt template with variable placeholders
-- [ ] Test manually with sample resumes before wiring into Make
-- [ ] Iterate until output quality is satisfactory
+- [ ] Module: Create GDrive candidate folder
+- [ ] Module: Upload + convert files to Google Docs
+- [ ] Module: Add row to Google Sheets
+- [ ] Module: Extract file text for Claude
+- [ ] Module: Call Claude API
+- [ ] Module: Parse JSON response
+- [ ] Module: Update Sheet with scores + summary
+- [ ] Module: Create LLM Evaluation doc in GDrive
+- [ ] Test end-to-end with a sample submission
 
 ---
 
-## Context Documents Needed
+## Context Documents Needed for Claude Prompt
 
-These will be loaded into the Claude system prompt to ground evaluations:
-
-- [ ] Job Description — Role A
-- [ ] Job Description — Role B
-- [ ] Synaptitudes (cultural tenets with descriptions)
-- [ ] Company Brief (distilled from website: what Synaptides does, project types, team culture)
-- [ ] Evaluation Rubric per role (what does a great candidate look like?)
+- [ ] Synaptitudes (cultural tenets with full descriptions)
+- [ ] Company brief (what Synaptiq does, types of projects, team culture)
+- [ ] Job description template (role-agnostic structure)
+- [ ] Evaluation rubric (what does a great Synaptiq candidate look like, regardless of role?)
 
 ---
 
-## Open Questions / Decisions
+## Open Questions
 
 | Question | Status |
 |---|---|
-| Which 2 roles are in MVP scope? | ⬜ To decide |
-| Low-code (Make) vs. custom code for automation? | ✅ Make.com for MVP |
-| Will AI screening interview be in MVP? | ✅ Out of scope for MVP |
-| Email acknowledgement automation — MVP or post? | ✅ Post-MVP |
-| Where will Tally forms be linked from? (Job postings, website, etc.) | ⬜ To decide |
+| Application form: Tally.so vs embedded on synaptiq.ai/careers | ⬜ Tally for MVP, website for Phase 2 |
+| Candidate DB: Google Sheets vs Airtable | ⬜ Pending decision |
+| Make.com account: exists or needs setup? | ⬜ Pending |
+| Anthropic API key: exists or needs setup? | ⬜ Pending |
+| Scoring direction confirmed: 1 = best, 5 = worst | ✅ Confirmed |
+| System is role-agnostic (role/JD are inputs) | ✅ Confirmed |
+| Specific roles for MVP | ✅ Not needed — system-first approach |
 
 ---
 
-## Repository Structure
+## Session Log
 
-```
-Recruiting-Automation/
-  docs/
-    project-plan.md       ← this file
-    setup.md              ← step-by-step setup guide
-  prompts/
-    candidate-evaluation.md   ← Claude prompt template
-  make-scenarios/
-    README.md             ← Make.com scenario build guide
-  sheets/
-    candidate-tracker-columns.md  ← Column spec for Google Sheets
-```
+### 2026-03-15 — Session 1
+**Decisions made:**
+- MVP scope defined: core loop only (application → Drive → Sheet → LLM evaluation → ranked list)
+- Tech stack selected: Tally + Make.com + GDrive + Google Sheets + Claude API
+- Scoring model: 1–5 scale (1 = best) across Job Match, Cultural Fit, Career Trajectory, Overall Rating
+- System must be role-agnostic; roles and job descriptions are inputs
+- Ranked candidate list is in MVP scope
+- Post-MVP: candidate communications, AI interview, scheduling, offer letters
+- GitHub repo created: github.com/FocusedDiversity/Recruiting-Automation
+
+**Completed:**
+- GitHub repo initialized and pushed
+- Initial project structure created (prompts/, make-scenarios/, sheets/, docs/)
+- Project plan written (this document)
+
+**Next session should start at:** Step 1 — Google Drive folder structure setup
